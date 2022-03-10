@@ -1,0 +1,27 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/nest-back/node_modules
+/nest-back/dist
+
+/react-front/node_modules
+/react-front/build
+/.pnp
+.pnp.js
+
+.idea
+
+# testing
+/coverage
+
+# production
+
+# misc
+/nest-back/.DS_Store
+/react-front/.DS_Store
+
+/nest-back/.env.local
+/react-front/.env.local
+
+/nest-back/npm-debug.log*
+/react-front/npm-debug.log*

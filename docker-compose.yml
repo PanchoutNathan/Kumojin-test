@@ -1,0 +1,51 @@
+version: "3"
+services:
+
+    postgres:
+        container_name: postgres
+        image: postgres:latest
+        ports:
+            - "5432:5432"
+        volumes:
+            - postgres:/data/postgres
+            - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+        env_file:
+            - docker.env
+        networks:
+            - database
+
+    backend:
+        container_name: backend
+        build:
+            context: ./nest-back
+            dockerfile: Dockerfile
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./nest-back:/app
+        networks:
+            - webapp
+            - database
+    frontend:
+        container_name: client
+        build:
+            context: ./react-front
+            dockerfile: Dockerfile
+        ports:
+            - "3001:3001"
+        volumes:
+            - ./react-front:/app
+        networks:
+            - webapp
+
+
+
+volumes:
+    postgres:
+
+networks:
+    webapp:
+        driver: bridge
+    database:
+        driver: bridge
+

@@ -57,9 +57,13 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
         enableReinitialize: true,
         onSubmit: values => {
             const newEvent: CalendarEvent = {...values}
+            console.log('values', {...values});
             newEvent.start = new Date(values.start).toISOString();
             newEvent.end = values.end != null ? new Date(values.end).toISOString() : undefined;
            console.log(newEvent);
+           CalendarEventsServices.addCalendarEvent(newEvent).then((event) => {
+               console.log(event);
+           })
         }
     });
 

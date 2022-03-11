@@ -2,7 +2,7 @@ version: "3"
 services:
 
     postgres:
-        container_name: postgres
+        container_name: kuomojin-postgres
         image: postgres:latest
         ports:
             - "5432:5432"
@@ -15,7 +15,7 @@ services:
             - database
 
     backend:
-        container_name: backend
+        container_name: kuomojin-backend
         build:
             context: ./nest-back
             dockerfile: Dockerfile
@@ -27,7 +27,7 @@ services:
             - webapp
             - database
     frontend:
-        container_name: client
+        container_name: kuomojin-client
         build:
             context: ./react-front
             dockerfile: Dockerfile

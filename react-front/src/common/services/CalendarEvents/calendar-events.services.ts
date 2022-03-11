@@ -15,7 +15,7 @@ export class CalendarEventsServices {
 
     public static async getAllEvents(): Promise<CalendarEvent[]> {
         return new Promise((resolve, reject) => {
-            http.get(ApiRoutesEnum.GET_ALL_EVENTS).then((response) => {
+            http.get(ApiRoutesEnum.EVENTS).then((response) => {
                 resolve(response.data);
             }).catch((error:AxiosError) => {
                 reject(error);
@@ -25,7 +25,22 @@ export class CalendarEventsServices {
 
     public static async addCalendarEvent(event: CalendarEvent): Promise<CalendarEvent> {
         return new Promise((resolve, reject) => {
-            http.post(ApiRoutesEnum.GET_ALL_EVENTS, event).then((response) => {
+            http.post(ApiRoutesEnum.EVENTS, event).then((response) => {
+                resolve(response.data);
+            }).catch((error:AxiosError) => {
+                reject(error);
+            })
+        })
+    }
+
+    public static async updateCalendarEvent(event: CalendarEvent): Promise<CalendarEvent> {
+        return new Promise((resolve, reject) => {
+            if (event.id == null) {
+                reject('event id is null');
+                return;
+            }
+            const url = ApiRoutesEnum.UPDATE_EVENT.replace(':id:', event.id + '');
+            http.put(url, event).then((response) => {
                 resolve(response.data);
             }).catch((error:AxiosError) => {
                 reject(error);

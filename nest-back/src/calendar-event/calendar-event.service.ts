@@ -30,8 +30,9 @@ export class CalendarEventService {
     return `This action returns a #${id} calendarEvent`;
   }
 
-  update(id: number, updateCalendarEventDto: UpdateCalendarEventDto) {
-    return `This action updates a #${id} calendarEvent`;
+  async update(id: number, updateCalendarEventDto: UpdateCalendarEventDto) {
+    await this.calendarEventRepository.update(id, updateCalendarEventDto);
+    return updateCalendarEventDto;
   }
 
   remove(id: number) {

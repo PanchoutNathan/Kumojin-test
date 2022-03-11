@@ -1,7 +1,7 @@
 import * as React from "react";
 import {FunctionComponent, useEffect, useState} from "react";
 import {
-    Box, Button, Checkbox,
+    Button, Checkbox,
     Dialog, DialogActions,
     DialogContent,
     DialogContentText,
@@ -10,16 +10,16 @@ import {
     Grid,
     TextField
 } from "@mui/material";
-import {DatePicker, DateTimePicker, TimePicker} from "@mui/lab";
+import {DatePicker, TimePicker} from "@mui/lab";
 import {CalendarEvent} from "../../common/entities/CalendarEvent/calendar-event.entity";
 import {CalendarEventsServices} from "../../common/services/CalendarEvents/calendar-events.services";
 import {useFormik} from "formik";
-import moment from "moment";
 
 interface EditCalendarEventModalProps {
     isOpen: boolean;
     handleClose: () => void;
     calendarEvent?: CalendarEvent;
+    onSubmit: (event: CalendarEvent) => void
 }
 
 interface EditCalendarEventModalState {
@@ -56,14 +56,19 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
         },
         enableReinitialize: true,
         onSubmit: values => {
-            const newEvent: CalendarEvent = {...values}
-            console.log('values', {...values});
+            const newEvent: CalendarEvent = {...values, id: state.calendarEvent?.id}
             newEvent.start = new Date(values.start).toISOString();
             newEvent.end = values.end != null ? new Date(values.end).toISOString() : undefined;
-           console.log(newEvent);
-           CalendarEventsServices.addCalendarEvent(newEvent).then((event) => {
-               console.log(event);
-           })
+
+            if (state.calendarEvent?.id != null) {
+                CalendarEventsServices.updateCalendarEvent(newEvent).then((event) => {
+                    props.onSubmit(event);
+                })
+            } else {
+                CalendarEventsServices.addCalendarEvent(newEvent).then((event) => {
+                    props.onSubmit(event);
+                })
+            }
         }
     });
 
@@ -138,9 +143,10 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <FormControlLabel control={<Checkbox {...formik.getFieldProps('allDay')}  />} label="Journée(s) entière(s)" />
+                    <FormControlLabel control={<Checkbox defaultChecked={state.calendarEvent?.allDay} {...formik.getFieldProps('allDay')}  />} label="Journée(s) entière(s)" />
                 </Grid>
             </Grid>
+
 
         </DialogContent>
         <DialogActions>

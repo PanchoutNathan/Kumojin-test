@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import './App.scss';
 import DateAdapter from '@mui/lab/AdapterMoment';
 
-import {AppBar, Container, TextField, Toolbar, Typography} from "@mui/material";
+import {AppBar, Container, TextField, ToggleButton, ToggleButtonGroup, Toolbar, Typography} from "@mui/material";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import interactionPlugin from "@fullcalendar/interaction";
@@ -12,19 +12,18 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import {DatePicker, DateTimePicker, DesktopTimePicker, LocalizationProvider} from '@mui/lab';
 import 'moment/locale/en-ca';
 import 'moment/locale/fr';
-import * as momentTz from 'moment-timezone'
 import {EditCalendarEventModal} from "./components/EditCalendarEventModal/EditCalendarEventModal";
 import {CalendarEvent} from "./common/entities/CalendarEvent/calendar-event.entity";
 import {DateSelectArg} from "@fullcalendar/core";
 import {CalendarEventsServices} from "./common/services/CalendarEvents/calendar-events.services";
 import moment from "moment-timezone/moment-timezone-utils";
 
-
+import frLocale from '@fullcalendar/core/locales/fr';
+import enLocale from '@fullcalendar/core/locales/es-us';
 
 interface State {
   events: any[];
   timeZone: string;
-  value: Date | null;
   editModalIsOpen: boolean;
   calendarEvent?: CalendarEvent;
 }
@@ -78,12 +77,11 @@ function App() {
     // ],
     events: [],
     timeZone: moment.tz.guess(),
-    value:   null,
     editModalIsOpen: false
   })
-  const local = 'fr';
+  const local = navigator.language;
   moment.locale(local);
-
+  moment.tz.setDefault(state.timeZone);
 
 
 
@@ -91,17 +89,49 @@ function App() {
     CalendarEventsServices.getAllEvents().then((events) => {
       setState(prevState => ({...prevState, events}));
     });
-    moment.tz.setDefault(state.timeZone);
   }, []);
+
 
   const handleCalendarSelect = (event: DateSelectArg): void => {
     const calendarEvent: CalendarEvent = CalendarEventsServices.getEmptyEvent();
-    console.log(event);
-    console.log(moment.tz('2022-03-06T07:30:00-05:00', 'America/Montreal').local());
-    const date = new Date('2022-03-06T07:30:00-05:00');
     calendarEvent.start = event.start.toISOString();
     calendarEvent.end = event.end.toISOString();
     setState(prevState => ({...prevState, calendarEvent, editModalIsOpen: true}));
+  }
+
+  const handleChangeTimezone = ( event: React.MouseEvent<HTMLElement>, timeZone: string): void => {
+      if (timeZone == null || timeZone === state.timeZone ) {
+        return;
+      }
+    setState(prevState => ({...prevState, events: [...prevState.events], timeZone}));
+  }
+
+  const onSubmitEditEvent = (newEvent: CalendarEvent): void => {
+    const newEvents: CalendarEvent[] = [...state.events];
+    const index = newEvents.findIndex((event) => {
+      return event.id === newEvent.id;
+    })
+
+    console.log(index);
+
+    if (index > -1) {
+      newEvents[index] = newEvent;
+    } else {
+      newEvents.push(newEvent);
+    }
+
+    setState(prevState => ({...prevState, editModalIsOpen: false,events: newEvents}))
+  }
+
+  const handleClickOnEvent = (eventId: number): void => {
+    const events: CalendarEvent[] = [...state.events];
+    let searchEvent = events.find((event) => {
+      return event.id === eventId;
+    })
+    if (searchEvent == null) {
+      return
+    }
+    setState(prevState => ({...prevState, calendarEvent: searchEvent, editModalIsOpen: true}));
   }
 
   return <>
@@ -115,33 +145,46 @@ function App() {
     </AppBar>
 
     <Container  sx={{padding: 2}} maxWidth={'md'}>
-      {state.timeZone}
+
+      <ToggleButtonGroup
+          color="primary"
+          value={state.timeZone}
+          exclusive
+          onChange={handleChangeTimezone}
+      >
+        <ToggleButton value={moment.tz.guess()}>Local</ToggleButton>
+        <ToggleButton value="America/Montreal">Montréal</ToggleButton>
+        <ToggleButton value="Europe/Paris">Paris</ToggleButton>
+      </ToggleButtonGroup>
 
       <FullCalendar
+          locales={[frLocale, enLocale]}
+          locale={navigator.language}
           headerToolbar={{
         left: 'prev,next today',
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       }}
-          eventTimeFormat={{ hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }}
+
           events={state.events}
           plugins={[momentTimezonePlugin, dayGridPlugin, timeGridPlugin, interactionPlugin]}
           timeZone={state.timeZone}
           initialView="timeGridWeek"
+          eventClick={(e) => {
+            handleClickOnEvent(+e.event.id);
+          }}
           navLinks={true} // can click day/week names to navigate views
           editable={true}
           selectable={true}
           dayMaxEvents={true}
           select={(e) => {
             handleCalendarSelect(e);
-              console.log(e);
-              setState(prevState => ({...prevState, value: e.start}))
-            console.log(e.start.toISOString());
           }}
       />
     </Container>
       <EditCalendarEventModal
           isOpen={state.editModalIsOpen}
+          onSubmit={onSubmitEditEvent}
           handleClose={() => {setState(prevState => ({...prevState, editModalIsOpen: false}))}}
           calendarEvent={state.calendarEvent}/>
     </LocalizationProvider>

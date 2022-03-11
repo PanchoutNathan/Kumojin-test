@@ -79,7 +79,7 @@ function App() {
     value:   null,
     editModalIsOpen: false
   })
-  const local = 'en-ca';
+  const local = 'fr';
   moment.locale(local);
 
   const handleCalendarSelect = (event: DateSelectArg): void => {

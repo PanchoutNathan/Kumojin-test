@@ -10,7 +10,7 @@ import {
     Grid,
     TextField
 } from "@mui/material";
-import {DateTimePicker} from "@mui/lab";
+import {DatePicker, DateTimePicker, TimePicker} from "@mui/lab";
 import {CalendarEvent} from "../../common/entities/CalendarEvent/calendar-event.entity";
 import {CalendarEventsServices} from "../../common/services/CalendarEvents/calendar-events.services";
 import {useFormik} from "formik";
@@ -52,12 +52,13 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
             description: state.calendarEvent?.description ?? '',
             start: state.calendarEvent?.start ?? '',
             end: state.calendarEvent?.end ?? '',
+            allDay: state.calendarEvent?.allDay ?? false,
         },
         enableReinitialize: true,
         onSubmit: values => {
-            values.start = new Date(values.start).toISOString();
-            values.end = new Date(values.end).toISOString();
             const newEvent: CalendarEvent = {...values}
+            newEvent.start = new Date(values.start).toISOString();
+            newEvent.end = values.end != null ? new Date(values.end).toISOString() : undefined;
            console.log(newEvent);
         }
     });
@@ -74,30 +75,54 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
             <DialogContentText>Renseignez toutes les informations sur l'événement</DialogContentText>
 
             <Grid marginTop={1} container spacing={2}>
-                <Grid item sm={12}>
+                <Grid item xs={12}>
                     <TextField {...formik.getFieldProps('title')} inputProps={{maxLength: 32}} fullWidth label="Title" variant="outlined" />
                 </Grid>
-                <Grid item sm={12} md={6}>
-                    <DateTimePicker
-
+                <Grid item xs={12} sm={6}>
+                    <DatePicker
                         renderInput={(props) => <TextField fullWidth {...props} />}
-                        label="Start"
+                        label="Date de début"
                         value={formik.values.start}
                         onChange={(newValue) => {
                             formik.setFieldValue('start', newValue);
                         }}
                     />
                 </Grid>
-                <Grid item sm={12} md={6}>
-                    <DateTimePicker
+                {!formik.values.allDay && <Grid item xs={12} sm={6}>
+                    <TimePicker
                         renderInput={(props) => <TextField fullWidth {...props} />}
-                        label="End"
+                        label="Heure de début"
+                        value={formik.values.start}
+                        onChange={(newValue) => {
+                            formik.setFieldValue('start', newValue);
+                        }}
+                    />
+
+                </Grid>}
+                <Grid item xs={12} sm={6}>
+                    <DatePicker
+                        clearable
+                        clearText={'Delete'}
+                        renderInput={(props) => <TextField fullWidth {...props} />}
+                        label="Date de fin"
                         value={formik.values.end}
                         onChange={(newValue) => {
                             formik.setFieldValue('end', newValue);
                         }}
                     />
                 </Grid>
+                {!formik.values.allDay && <Grid item xs={12} sm={6}>
+                    <TimePicker
+                        clearable
+                        clearText={'Delete'}
+                        renderInput={(props) => <TextField fullWidth {...props} />}
+                        label="Heure de fin"
+                        value={formik.values.end}
+                        onChange={(newValue) => {
+                            formik.setFieldValue('end', newValue);
+                        }}
+                    />
+                </Grid>}
                 <Grid item xs={12}>
                     <TextField
                         fullWidth
@@ -108,8 +133,8 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
                         maxRows={6}
                     />
                 </Grid>
-                <Grid item xs={12} md={6}>
-                    <FormControlLabel control={<Checkbox  />} label="Toute la journée" />
+                <Grid item xs={12}>
+                    <FormControlLabel control={<Checkbox {...formik.getFieldProps('allDay')}  />} label="Journée(s) entière(s)" />
                 </Grid>
             </Grid>
 

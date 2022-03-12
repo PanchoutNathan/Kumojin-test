@@ -59,8 +59,8 @@ Cependant je peux vous décrire comment je fais pour déployer mon projet person
 
 ## e2e Testing ## 
 J'ai écrit des tests e2e avec une base de test. Je préfère cette approche car comme ça on est au plus prêt de l'utilisateur final.
-Ça rassemble les tests unitaires + intégrations.
-Bien évidemment, pour une approche TDD, on ne procède pas comme ça, mais en commençant avec des mocks des services, etc.
+Ça rassemble les tests unitaires + d'intégrations.
+Bien évidemment, pour une approche TDD, on ne procède pas directement comme ça, mais en commençant avec des mocks des services, etc.
 
 J'ai testé les routes suivantes :
 

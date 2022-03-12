@@ -48,7 +48,7 @@ Je ne pense pas que ce soit l'objectif non plus, mais au cas où je présente le
 Je n'ai pas écrit de Dockerfile / docker-compose pour un mode production. Je pense que l'objectif était de savoir si je pouvais
 utiliser Docker et j'ai déjà fait une stack Docker pour le développement.
 
-Cependant je peux vous décrire comme je fais pour déployer mon projet personnel qui est sur la même stack (sauf la database qui est sur du MongoDB)
+Cependant je peux vous décrire comment je fais pour déployer mon projet personnel qui est sur la même stack (sauf la database qui est sur du MongoDB)
 , tout est automatisé :
 
 - Je build mon react en mode production

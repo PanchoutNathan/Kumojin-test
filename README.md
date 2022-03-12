@@ -57,8 +57,15 @@ Cependant je peux vous décrire comme je fais pour déployer mon projet personne
 
 ## e2e Testing ## 
 J'ai écrit des tests e2e avec une base de test. Je préfère cette approche car comme ça on est au plus prêt de l'utilisateur final. 
-Ça rassemble les tests unitaires + intégrations
+Ça rassemble les tests unitaires + intégrations.
+Bien évidement, pour une approche TDD, on ne procèderais pas comme ça, mais en commençant avec des mocks des services, etc. 
 
-Pour lancer les tests, à l'aide de votre terminal rendez-vous à la racine du projet `nest-back`. Puis tapez la commande :
+J'ai testé les routes suivantes : 
+
+    GET /api/calendar-events
+    POST /api/calendar-events
+    PUT /api/calendar-events/:id
+
+Pour lancer les tests, à l'aide de votre terminal, rendez-vous à la racine du projet `nest-back`. Puis tapez la commande :
 `npm run test:e2e`
 

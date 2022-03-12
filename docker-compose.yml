@@ -7,7 +7,7 @@ services:
         ports:
             - "5432:5432"
         volumes:
-            - postgres:/data/postgres
+            - kumojinPg:/data/postgres
             - ./init.sql:/docker-entrypoint-initdb.d/init.sql
         env_file:
             - docker.env
@@ -41,7 +41,7 @@ services:
 
 
 volumes:
-    postgres:
+    kumojinPg:
 
 networks:
     webapp:

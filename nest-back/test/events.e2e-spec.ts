@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { CalendarEvent } from '../src/calendar-event/entities/calendar-event.entity';
 import { CreateCalendarEventDto } from '../src/calendar-event/dto/create-calendar-event.dto';
 import { CalendarEventService } from '../src/calendar-event/calendar-event.service';
+import { TestDatabaseModule } from '../src/test-database/test-database.module';
 
 describe('CalendarEventController (e2e)', () => {
   let app: INestApplication;
@@ -16,22 +17,7 @@ describe('CalendarEventController (e2e)', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        CalendarEventModule,
-        TypeOrmModule.forRoot({
-          type: 'postgres',
-          host: 'localhost',
-          port: 5432,
-          username: 'admin',
-          password: 'admin',
-          database: 'e2e_test',
-          entities: ['./**/*.entity.ts'],
-          synchronize: true,
-          migrations: ['dist/migrations/*{.ts,.js}'],
-          migrationsTableName: 'migrations_typeorm',
-          migrationsRun: true,
-        }),
-      ],
+      imports: [CalendarEventModule, TestDatabaseModule],
     }).compile();
 
     app = module.createNestApplication();

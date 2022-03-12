@@ -1,39 +1,62 @@
-##Application de gestion d’événements ##
+# Nathan Kumojin-Test
 
-L’objectif est d’avoir une application basique de gestion des événements.
+## Features ##
 
+Le front se présente sous forme d'un calendrier. Pour ajouter un évènement, il suffit de cliquer
+sur le calendrier ou de selectionner une plage horraire en cliquant puis glissant.
 
+Une modale va alors s'ouvrir avec le début et la fin de pré-configuré. 
 
-Un événement est caractérisé par son nom (32 caractères maximum), sa description et ses dates de début et de fin. Attention, les événements peuvent avoir lieu n’importe où dans le monde, n’oublie pas de prendre en compte la timezone.
+Vous pouvez aussi cliquer sur un événement pour le modifier.
 
-
-
-### Le back-end ###
-Une API REST qui retourne du JSON. Il doit gérer les opérations suivantes :
-
-- Créer un événement
-- Lister les événements
-
-
-### Le front-end doit permettre de : ###
-
-- Créer un événement
-- Lister les événements (optionnel)
-
-
-### Optionnel: une fois cette application terminée prépare son déploiement en : ###
-
-- Écrivant les Dockerfile qui construisent les applications front-end et back-end 
-- Écrivant les GitHub Action pour tester, builder et déployer dans Kubernetes
-- Écrivant les manifests Kubernetes pour déployer les 2 applications avec un Ingress, on part du principe que le cluster possède un Nginx Ingress Controller
-
-
-Considère que cette application est la base d’un nouveau produit et qu’il faut qu’elle soit codée dans les règles de l’art. Tu peux bien entendu faire des compromis sur l’implémentation mais sois prêt à en discuter et à les justifier.
+Comme les timezones étaient importantes, j'ai mis quelques boutons pour selectionner une timezone.
 
 
 
-Quand tu as terminé, tu peux juste nous donner l'adresse de ton repository GitHub (un seul repository avec le front et le back), on y jettera un coup d'œil.
+## Stack ##
+- Front: React + TS. Pour le projet, il y avait une option qui était de lister les événements. Pour
+  cela j'ai utilisé Fullcalendar pour le présenter sous forme de calendrier. Je n'ai pas eu besoin d'utiliser un router car 
+j'ai fait tout dans la même page.
 
 
+- Back: NestJS avec TypeORM
 
-Si tu as besoin d'autres informations, n'hésite pas !
+
+- Database : Postgres
+
+J'ai mis environ 8h.
+
+
+## Docker ## 
+
+J'ai tout intégré dans Docker (React + Nest + Postgres, en mode développement). Comme ça vous avez qu'un `docker-compose up` à faire.
+La création des databases est aussi effectuée à l'aide du `init.sql`
+
+- Le front se trouve sur le port 3001.
+- Le back se trouve sur le port 3000.
+
+Puis rendez-vous sur `http://localhost:3001/` pour accéder au front.
+
+### Amélioration du Docker ###
+Je pense pas que ce soit l'objectif non plus, mais au cas ou je présente les améliorations que j'aurais pu faire : 
+- Ajouter des variables d'environements pour setup la connexion à la DB avec un docker.env. Comme ça permet
+d'avoir en local une configuration différente. Car évidement, les builds de l'app react / Nest sont super long dans le docker. (Sur Mac)
+
+### Remarque sur le mode production ### 
+Je n'ai pas écrit de Dockerfile / docker-compose pour un mode production. Je pense que l'objectif était de savoir si je pouvais 
+utiliser Docker et j'ai déjà fait une stack Docker pour le developpement.
+
+Cependant je peux vous décrire comme je fais pour déployer mon projet personnel qui est sur la même stack (sauf la databse qui est sur du MongoDB)
+, tout est automatisé :
+
+- Je build mon react en mode production
+- Je copie tout le contenu du dossier du build dans le dossier public du projet NestJS (Nest peut rendre évidement du static)
+- Pour finir je lance mon nest en mode production.
+
+## e2e Testing ## 
+J'ai écrit des tests e2e avec une base de test. Je préfère cette approche car comme ça on est au plus prêt de l'utilisateur final. 
+Ça rassemble les tests unitaires + intégrations
+
+Pour lancer les tests, à l'aide de votre terminal rendez-vous à la racine du projet `nest-back`. Puis tapez la commande :
+`npm run test:e2e`
+

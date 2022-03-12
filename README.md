@@ -62,9 +62,9 @@ Bien évidemment, pour une approche TDD, on ne procède pas comme ça, mais en c
 
 J'ai testé les routes suivantes :
 
-GET /api/calendar-events
-POST /api/calendar-events
-PUT /api/calendar-events/:id
+    GET /api/calendar-events
+    POST /api/calendar-events
+    PUT /api/calendar-events/:id
 
 Pour lancer les tests, à l'aide de votre terminal, rendez-vous à la racine du projet `nest-back`. Puis tapez la commande :
 `npm run test:e2e`

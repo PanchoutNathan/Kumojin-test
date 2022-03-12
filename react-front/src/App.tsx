@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import './App.scss';
 import DateAdapter from '@mui/lab/AdapterMoment';
-import {AppBar, Container, ToggleButton, ToggleButtonGroup, Toolbar, Typography} from "@mui/material";
+import {AppBar, Container, ToggleButton, ToggleButtonGroup, Toolbar, Typography, useMediaQuery} from "@mui/material";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from "@fullcalendar/interaction";
@@ -26,6 +26,8 @@ interface State {
 }
 
 function App() {
+  const calendar: any = useRef(null);
+  const isMobile = useMediaQuery('(max-width:721px)');
   const [state, setState] = useState<State>({
     events: [],
     timeZone: moment.tz.guess(),
@@ -35,14 +37,19 @@ function App() {
   moment.locale(local);
   moment.tz.setDefault(state.timeZone);
 
-
-
   useEffect(() => {
     CalendarEventsServices.getAllEvents().then((events) => {
       setState(prevState => ({...prevState, events}));
     });
   }, []);
 
+  useEffect(() => {
+    if (isMobile) {
+      calendar?.current?.getApi().changeView('timeGridDay');
+    } else {
+      calendar?.current?.getApi().changeView('timeGridWeek');
+    }
+  }, [isMobile]);
 
   const handleCalendarSelect = (event: DateSelectArg): void => {
     const calendarEvent: CalendarEvent = CalendarEventsServices.getEmptyEvent();
@@ -95,8 +102,7 @@ function App() {
     </AppBar>
 
     <Container  sx={{padding: 2}} maxWidth={'md'}>
-
-      <ToggleButtonGroup
+      { !isMobile && <ToggleButtonGroup
           sx={{marginBottom: 2}}
           color="primary"
           value={state.timeZone}
@@ -109,12 +115,17 @@ function App() {
         <ToggleButton value="Asia/Tokyo">Tokyo</ToggleButton>
         <ToggleButton value="America/New_York">New York</ToggleButton>
         <ToggleButton value="America/Mexico_City">Mexico</ToggleButton>
-      </ToggleButtonGroup>
+      </ToggleButtonGroup>}
 
       <FullCalendar
+          ref={calendar}
           locales={[frLocale, enLocale]}
           locale={navigator.language}
-          headerToolbar={{
+          headerToolbar={isMobile ? {
+            left: 'prev,next today',
+            center: '',
+            right: ''
+          } : {
         left: 'prev,next today',
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
@@ -123,7 +134,7 @@ function App() {
           events={state.events}
           plugins={[momentTimezonePlugin, dayGridPlugin, timeGridPlugin, interactionPlugin]}
           timeZone={state.timeZone}
-          initialView="timeGridWeek"
+          initialView={isMobile ? "timeGridDay" : "timeGridWeek"}
           eventClick={(e) => {
             handleClickOnEvent(+e.event.id);
           }}

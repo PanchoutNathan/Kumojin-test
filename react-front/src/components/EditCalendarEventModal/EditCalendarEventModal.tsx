@@ -113,8 +113,6 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
                 </Grid>}
                 <Grid item xs={12} sm={6}>
                     <DatePicker
-                        clearable
-                        clearText={'Delete'}
                         renderInput={(props) => <TextField fullWidth {...props} />}
                         label="Date de fin"
                         value={formik.values.end}
@@ -125,8 +123,6 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
                 </Grid>
                 {!formik.values.allDay && <Grid item xs={12} sm={6}>
                     <TimePicker
-                        clearable
-                        clearText={'Delete'}
                         renderInput={(props) => <TextField fullWidth {...props} />}
                         label="Heure de fin"
                         value={formik.values.hourEnd}

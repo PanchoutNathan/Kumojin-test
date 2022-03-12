@@ -11,6 +11,8 @@ Vous pouvez aussi cliquer sur un événement pour le modifier.
 
 Comme les timezones étaient importantes, j'ai mis quelques boutons pour selectionner une timezone.
 
+#### Responsive ####
+Pour le responsive, j'ai fait en sorte que le calendrier se mette en mode "day" pour que ça puisse être utilisable. 
 
 
 ## Stack ##

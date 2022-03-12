@@ -31,10 +31,9 @@ function App() {
   const [state, setState] = useState<State>({
     events: [],
     timeZone: moment.tz.guess(),
-    editModalIsOpen: false
+    editModalIsOpen: false,
   })
-  const local = navigator.language;
-  moment.locale(local);
+  moment.locale(navigator.language);
   moment.tz.setDefault(state.timeZone);
 
   useEffect(() => {
@@ -42,6 +41,7 @@ function App() {
       setState(prevState => ({...prevState, events}));
     });
   }, []);
+
 
   useEffect(() => {
     if (isMobile) {
@@ -92,7 +92,7 @@ function App() {
   }
 
   return <>
-    <LocalizationProvider  dateAdapter={DateAdapter} locale={local}>
+    <LocalizationProvider  dateAdapter={DateAdapter} locale={navigator.language}>
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>

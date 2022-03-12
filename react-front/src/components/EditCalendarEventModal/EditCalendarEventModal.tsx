@@ -10,7 +10,7 @@ import {
     Grid,
     TextField
 } from "@mui/material";
-import {DatePicker, DesktopTimePicker, TimePicker} from "@mui/lab";
+import {DatePicker, TimePicker} from "@mui/lab";
 import {CalendarEvent} from "../../common/entities/CalendarEvent/calendar-event.entity";
 import {CalendarEventsServices} from "../../common/services/CalendarEvents/calendar-events.services";
 import {useFormik} from "formik";
@@ -99,7 +99,7 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
                     />
                 </Grid>
                 {!formik.values.allDay && <Grid item xs={12} sm={6}>
-                    <DesktopTimePicker
+                    <TimePicker
                         renderInput={(props) => {
                             return <TextField fullWidth {...props} />
                         }}

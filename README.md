@@ -53,6 +53,8 @@ Cependant je peux vous décrire comme je fais pour déployer mon projet personne
 
 - Je build mon react en mode production
 - Je copie tout le contenu du dossier du build dans le dossier public du projet NestJS (Nest peut évidemment rendre du static)
+- Je setup toutes les variables d'environnements nécessaires
+- Je build mon app NestJS en mode production
 - Pour finir je lance mon nest en mode production.
 
 ## e2e Testing ## 

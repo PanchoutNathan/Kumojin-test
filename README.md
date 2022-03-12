@@ -18,7 +18,7 @@ Pour le responsive, j'ai fait en sorte que le calendrier se mette en mode "day" 
 ## Stack ##
 - Front: React + TS. Pour le projet, il y avait une option qui était de lister les événements. Pour
   cela j'ai utilisé Fullcalendar pour le présenter sous forme de calendrier. Je n'ai pas eu besoin d'utiliser un routeur car
-  j'ai fait tout dans la même page.
+  j'ai tout fait dans la même page.
 
 
 - Back: NestJS avec TypeORM
@@ -40,7 +40,7 @@ La création des databases est aussi effectuée à l'aide du `init.sql`
 Puis rendez-vous sur `http://localhost:3001/` pour accéder au front.
 
 ### Amélioration du Docker ###
-Je pense pas que ce soit l'objectif non plus, mais au cas ou je présente les améliorations que j'aurais pu faire :
+Je ne pense pas que ce soit l'objectif non plus, mais au cas où je présente les améliorations que j'aurais pu faire :
 - Ajouter des variables d'environnements pour setup la connexion à la DB avec un docker.env. Comme ça permet
   d'avoir en local une configuration différente. Car évidemment, les builds de l'app react / Nest sont super longs dans le docker. (Sur Mac)
 

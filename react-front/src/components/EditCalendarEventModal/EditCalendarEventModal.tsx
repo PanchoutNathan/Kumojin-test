@@ -33,29 +33,17 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
         calendarEvent: CalendarEventsServices.getEmptyEvent()
     })
 
-
-
     const handleClose = (): void => {
         props.handleClose();
     }
 
-
-    const handleUpdateEvent = (key: string, value: Date | string | undefined): void => {
-        if (state?.calendarEvent == null) {
-            return;
-        }
-        const newEvent: CalendarEvent = {...state?.calendarEvent, [key]: value};
-        setState(prevState => ({...prevState, calendarEvent: newEvent}))
-    }
-
-    const setHours = (date: Date, hours: Date, isAllDay: boolean): Date => {
+    const setHours = (date: Date, hours: Date): Date => {
         date.setHours(hours.getHours())
         date.setMinutes( hours.getMinutes())
         date.setSeconds(0);
-        // date.setHours(isAllDay ? 0 : hours.getHours())
-        // date.setMinutes(isAllDay ? 0 : hours.getMinutes())
         return date;
     }
+
     const formik = useFormik({
         initialValues: {
             title: state.calendarEvent?.title ?? '',
@@ -70,8 +58,8 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
         onSubmit: values => {
             const {hourStart, hourEnd, ...eventValues} = values;
             const newEvent: CalendarEvent = {...eventValues, id: state.calendarEvent?.id}
-            newEvent.start = setHours(new Date(values.start), new Date(values.hourStart), values.allDay).toISOString();
-            newEvent.end = setHours(new Date(values.end), new Date(values.hourEnd), values.allDay).toISOString();
+            newEvent.start = setHours(new Date(values.start), new Date(values.hourStart)).toISOString();
+            newEvent.end = setHours(new Date(values.end), new Date(values.hourEnd)).toISOString();
 
             if (state.calendarEvent?.id != null) {
                 CalendarEventsServices.updateCalendarEvent(newEvent).then((event) => {
@@ -118,13 +106,6 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
                         label="Heure de début"
                         value={formik.values.hourStart}
                         onChange={(newValue: Moment | null) => {
-                            if (!newValue?.isValid()) {
-                                return;
-                            }
-
-                            // newValue?.year(.year())
-                            // newValue?.month(moment(formik.values.start).month())
-                            // newValue?.date(moment(formik.values.start).date())
                             formik.setFieldValue('hourStart', newValue);
                         }}
                     />

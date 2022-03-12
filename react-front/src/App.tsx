@@ -1,13 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import './App.scss';
 import DateAdapter from '@mui/lab/AdapterMoment';
-
 import {AppBar, Container, ToggleButton, ToggleButtonGroup, Toolbar, Typography} from "@mui/material";
 import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
+import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from "@fullcalendar/interaction";
 import momentTimezonePlugin from '@fullcalendar/moment-timezone'
-
 import timeGridPlugin from '@fullcalendar/timegrid'
 import {LocalizationProvider} from '@mui/lab';
 import 'moment/locale/en-ca';
@@ -17,7 +15,6 @@ import {CalendarEvent} from "./common/entities/CalendarEvent/calendar-event.enti
 import {DateSelectArg} from "@fullcalendar/core";
 import {CalendarEventsServices} from "./common/services/CalendarEvents/calendar-events.services";
 import moment from "moment-timezone/moment-timezone-utils";
-
 import frLocale from '@fullcalendar/core/locales/fr';
 import enLocale from '@fullcalendar/core/locales/es-us';
 

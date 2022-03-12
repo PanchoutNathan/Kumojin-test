@@ -1,4 +1,4 @@
 export enum ApiRoutesEnum {
-    EVENTS = '/calendar-event',
-    UPDATE_EVENT = '/calendar-event/:id:'
+    EVENTS = '/calendar-events',
+    UPDATE_EVENT = '/calendar-events/:id:'
 }

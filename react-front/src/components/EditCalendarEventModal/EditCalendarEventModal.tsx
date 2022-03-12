@@ -10,10 +10,11 @@ import {
     Grid,
     TextField
 } from "@mui/material";
-import {DatePicker, TimePicker} from "@mui/lab";
+import {DatePicker, DesktopTimePicker, TimePicker} from "@mui/lab";
 import {CalendarEvent} from "../../common/entities/CalendarEvent/calendar-event.entity";
 import {CalendarEventsServices} from "../../common/services/CalendarEvents/calendar-events.services";
 import {useFormik} from "formik";
+import {Moment} from "moment";
 
 interface EditCalendarEventModalProps {
     isOpen: boolean;
@@ -46,19 +47,31 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
         const newEvent: CalendarEvent = {...state?.calendarEvent, [key]: value};
         setState(prevState => ({...prevState, calendarEvent: newEvent}))
     }
+
+    const setHours = (date: Date, hours: Date, isAllDay: boolean): Date => {
+        date.setHours(hours.getHours())
+        date.setMinutes( hours.getMinutes())
+        date.setSeconds(0);
+        // date.setHours(isAllDay ? 0 : hours.getHours())
+        // date.setMinutes(isAllDay ? 0 : hours.getMinutes())
+        return date;
+    }
     const formik = useFormik({
         initialValues: {
             title: state.calendarEvent?.title ?? '',
             description: state.calendarEvent?.description ?? '',
             start: state.calendarEvent?.start ?? '',
+            hourStart: state.calendarEvent?.start ?? '',
             end: state.calendarEvent?.end ?? '',
+            hourEnd: state.calendarEvent?.end ?? '',
             allDay: state.calendarEvent?.allDay ?? false,
         },
         enableReinitialize: true,
         onSubmit: values => {
-            const newEvent: CalendarEvent = {...values, id: state.calendarEvent?.id}
-            newEvent.start = new Date(values.start).toISOString();
-            newEvent.end = values.end != null ? new Date(values.end).toISOString() : undefined;
+            const {hourStart, hourEnd, ...eventValues} = values;
+            const newEvent: CalendarEvent = {...eventValues, id: state.calendarEvent?.id}
+            newEvent.start = setHours(new Date(values.start), new Date(values.hourStart), values.allDay).toISOString();
+            newEvent.end = setHours(new Date(values.end), new Date(values.hourEnd), values.allDay).toISOString();
 
             if (state.calendarEvent?.id != null) {
                 CalendarEventsServices.updateCalendarEvent(newEvent).then((event) => {
@@ -98,12 +111,21 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
                     />
                 </Grid>
                 {!formik.values.allDay && <Grid item xs={12} sm={6}>
-                    <TimePicker
-                        renderInput={(props) => <TextField fullWidth {...props} />}
+                    <DesktopTimePicker
+                        renderInput={(props) => {
+                            return <TextField fullWidth {...props} />
+                        }}
                         label="Heure de début"
-                        value={formik.values.start}
-                        onChange={(newValue) => {
-                            formik.setFieldValue('start', newValue);
+                        value={formik.values.hourStart}
+                        onChange={(newValue: Moment | null) => {
+                            if (!newValue?.isValid()) {
+                                return;
+                            }
+
+                            // newValue?.year(.year())
+                            // newValue?.month(moment(formik.values.start).month())
+                            // newValue?.date(moment(formik.values.start).date())
+                            formik.setFieldValue('hourStart', newValue);
                         }}
                     />
 
@@ -126,9 +148,9 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
                         clearText={'Delete'}
                         renderInput={(props) => <TextField fullWidth {...props} />}
                         label="Heure de fin"
-                        value={formik.values.end}
+                        value={formik.values.hourEnd}
                         onChange={(newValue) => {
-                            formik.setFieldValue('end', newValue);
+                            formik.setFieldValue('hourEnd', newValue);
                         }}
                     />
                 </Grid>}
@@ -146,8 +168,6 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
                     <FormControlLabel control={<Checkbox defaultChecked={state.calendarEvent?.allDay} {...formik.getFieldProps('allDay')}  />} label="Journée(s) entière(s)" />
                 </Grid>
             </Grid>
-
-
         </DialogContent>
         <DialogActions>
             <Button onClick={formik.submitForm}>Submit</Button>

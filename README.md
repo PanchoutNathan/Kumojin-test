@@ -14,6 +14,9 @@ Comme les timezones étaient importantes, j'ai mis quelques boutons pour sélect
 #### Responsive ####
 Pour le responsive, j'ai fait en sorte que le calendrier se mette en mode "day" pour que ça puisse être utilisable.
 
+#### Gestion des erreurs ####
+J'ai fait une toute petite gestion des erreurs. Si une erreur a eu lieu, une petite notification s'affiche en haut de l'écran
+
 
 ## Stack ##
 - Front: React + TS. Pour le projet, il y avait une option qui était de lister les événements. Pour

@@ -3,7 +3,7 @@ import http from "../http/http.service";
 import {ApiRoutesEnum} from "../../constants/ApiRoutesEnum";
 import {AxiosError} from "axios";
 
-export class CalendarEventsServices {
+export class CalendarEventsService {
 
     public static getEmptyEvent(): CalendarEvent {
         return {

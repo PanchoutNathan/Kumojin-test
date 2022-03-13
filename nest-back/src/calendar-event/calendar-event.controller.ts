@@ -3,9 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
   Put,
 } from '@nestjs/common';
 import { CalendarEventService } from './calendar-event.service';
@@ -26,21 +24,11 @@ export class CalendarEventController {
     return this.calendarEventService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.calendarEventService.findOne(+id);
-  }
-
   @Put(':id')
   update(
     @Param('id') id: string,
     @Body() updateCalendarEventDto: UpdateCalendarEventDto,
   ) {
     return this.calendarEventService.update(+id, updateCalendarEventDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.calendarEventService.remove(+id);
   }
 }

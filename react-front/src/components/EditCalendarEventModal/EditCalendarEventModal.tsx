@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import {DatePicker, TimePicker} from "@mui/lab";
 import {CalendarEvent} from "../../common/entities/CalendarEvent/calendar-event.entity";
-import {CalendarEventsServices} from "../../common/services/CalendarEvents/calendar-events.services";
+import {CalendarEventsService} from "../../common/services/calendarEvents/calendar-events.service";
 import {useFormik} from "formik";
 import {Moment} from "moment";
 import {useSnackbar} from "notistack";
@@ -33,7 +33,7 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
 
     const { enqueueSnackbar } = useSnackbar();
     const [state, setState] = useState<EditCalendarEventModalState>({
-        calendarEvent: CalendarEventsServices.getEmptyEvent()
+        calendarEvent: CalendarEventsService.getEmptyEvent()
     })
 
     const handleClose = (): void => {
@@ -65,7 +65,7 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
             newEvent.end = setHours(new Date(values.end), new Date(values.hourEnd)).toISOString();
 
             if (state.calendarEvent?.id != null) {
-                CalendarEventsServices.updateCalendarEvent(newEvent).then((event) => {
+                CalendarEventsService.updateCalendarEvent(newEvent).then((event) => {
                     props.onSubmit(event);
                 }).catch((error: AxiosError) => {
                     enqueueSnackbar('Une erreur est survenue lors de l\'update', {
@@ -77,7 +77,7 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
                     })
                 })
             } else {
-                CalendarEventsServices.addCalendarEvent(newEvent).then((event) => {
+                CalendarEventsService.addCalendarEvent(newEvent).then((event) => {
                     props.onSubmit(event);
                 }).catch((error: AxiosError) => {
                     enqueueSnackbar('Une erreur est survenue lors de la création', {
@@ -93,7 +93,7 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
     });
 
     useEffect(() => {
-        const event = props.calendarEvent ?? CalendarEventsServices.getEmptyEvent();
+        const event = props.calendarEvent ?? CalendarEventsService.getEmptyEvent();
         setState(prevState => ({...prevState, calendarEvent: event}));
     }, [props.calendarEvent])
 

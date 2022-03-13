@@ -3,8 +3,7 @@ import { CreateCalendarEventDto } from './dto/create-calendar-event.dto';
 import { UpdateCalendarEventDto } from './dto/update-calendar-event.dto';
 import { CalendarEvent } from './entities/calendar-event.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import {Repository} from "typeorm";
-
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CalendarEventService {
@@ -23,19 +22,10 @@ export class CalendarEventService {
 
   findAll() {
     return this.calendarEventRepository.find();
-    return `This action returns all calendarEvent`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} calendarEvent`;
   }
 
   async update(id: number, updateCalendarEventDto: UpdateCalendarEventDto) {
     await this.calendarEventRepository.update(id, updateCalendarEventDto);
     return updateCalendarEventDto;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} calendarEvent`;
   }
 }

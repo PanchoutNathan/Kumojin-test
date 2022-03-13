@@ -13,7 +13,7 @@ import 'moment/locale/fr';
 import {EditCalendarEventModal} from "./components/EditCalendarEventModal/EditCalendarEventModal";
 import {CalendarEvent} from "./common/entities/CalendarEvent/calendar-event.entity";
 import {DateSelectArg} from "@fullcalendar/core";
-import {CalendarEventsServices} from "./common/services/CalendarEvents/calendar-events.services";
+import {CalendarEventsService} from "./common/services/calendarEvents/calendar-events.service";
 import moment from "moment-timezone/moment-timezone-utils";
 import frLocale from '@fullcalendar/core/locales/fr';
 import enLocale from '@fullcalendar/core/locales/es-us';
@@ -40,7 +40,7 @@ function App() {
   moment.tz.setDefault(state.timeZone);
 
   useEffect(() => {
-    CalendarEventsServices.getAllEvents().then((events) => {
+    CalendarEventsService.getAllEvents().then((events) => {
       setState(prevState => ({...prevState, events}));
     }).catch((error: AxiosError) => {
       enqueueSnackbar('Une erreur est survenue lors du chargement des events', {
@@ -63,7 +63,7 @@ function App() {
   }, [isMobile]);
 
   const handleCalendarSelect = (event: DateSelectArg): void => {
-    const calendarEvent: CalendarEvent = CalendarEventsServices.getEmptyEvent();
+    const calendarEvent: CalendarEvent = CalendarEventsService.getEmptyEvent();
     calendarEvent.start = event.start.toISOString();
     calendarEvent.end = event.end.toISOString();
     setState(prevState => ({...prevState, calendarEvent, editModalIsOpen: true}));

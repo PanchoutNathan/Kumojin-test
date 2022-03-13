@@ -15,6 +15,8 @@ import {CalendarEvent} from "../../common/entities/CalendarEvent/calendar-event.
 import {CalendarEventsServices} from "../../common/services/CalendarEvents/calendar-events.services";
 import {useFormik} from "formik";
 import {Moment} from "moment";
+import {useSnackbar} from "notistack";
+import {AxiosError} from "axios";
 
 interface EditCalendarEventModalProps {
     isOpen: boolean;
@@ -29,6 +31,7 @@ interface EditCalendarEventModalState {
 
 export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalProps> = ({...props}) => {
 
+    const { enqueueSnackbar } = useSnackbar();
     const [state, setState] = useState<EditCalendarEventModalState>({
         calendarEvent: CalendarEventsServices.getEmptyEvent()
     })
@@ -64,10 +67,26 @@ export const EditCalendarEventModal: FunctionComponent<EditCalendarEventModalPro
             if (state.calendarEvent?.id != null) {
                 CalendarEventsServices.updateCalendarEvent(newEvent).then((event) => {
                     props.onSubmit(event);
+                }).catch((error: AxiosError) => {
+                    enqueueSnackbar('Une erreur est survenue lors de l\'update', {
+                        variant: 'error',
+                        anchorOrigin: {
+                            vertical: 'top',
+                            horizontal: 'center',
+                        },
+                    })
                 })
             } else {
                 CalendarEventsServices.addCalendarEvent(newEvent).then((event) => {
                     props.onSubmit(event);
+                }).catch((error: AxiosError) => {
+                    enqueueSnackbar('Une erreur est survenue lors de la création', {
+                        variant: 'error',
+                        anchorOrigin: {
+                            vertical: 'top',
+                            horizontal: 'center',
+                        },
+                    })
                 })
             }
         }

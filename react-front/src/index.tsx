@@ -4,11 +4,12 @@ import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { LocalizationProvider } from '@mui/lab';
+import {SnackbarProvider} from "notistack";
 
 
 ReactDOM.render(
   <React.StrictMode>
-      <App />
+      <SnackbarProvider maxSnack={3}> <App /></SnackbarProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

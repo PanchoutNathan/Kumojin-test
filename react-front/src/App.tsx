@@ -17,6 +17,8 @@ import {CalendarEventsServices} from "./common/services/CalendarEvents/calendar-
 import moment from "moment-timezone/moment-timezone-utils";
 import frLocale from '@fullcalendar/core/locales/fr';
 import enLocale from '@fullcalendar/core/locales/es-us';
+import {useSnackbar} from "notistack";
+import {AxiosError} from "axios";
 
 interface State {
   events: any[];
@@ -28,6 +30,7 @@ interface State {
 function App() {
   const calendar: any = useRef(null);
   const isMobile = useMediaQuery('(max-width:721px)');
+  const { enqueueSnackbar } = useSnackbar();
   const [state, setState] = useState<State>({
     events: [],
     timeZone: moment.tz.guess(),
@@ -39,6 +42,14 @@ function App() {
   useEffect(() => {
     CalendarEventsServices.getAllEvents().then((events) => {
       setState(prevState => ({...prevState, events}));
+    }).catch((error: AxiosError) => {
+      enqueueSnackbar('Une erreur est survenue lors du chargement des events', {
+        variant: 'error',
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'center',
+        },
+      })
     });
   }, []);
 
@@ -154,7 +165,7 @@ function App() {
           handleClose={() => {setState(prevState => ({...prevState, editModalIsOpen: false}))}}
           calendarEvent={state.calendarEvent}/>
     </LocalizationProvider>
-  </>
+    </>
 }
 
 export default App;
